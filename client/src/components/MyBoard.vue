@@ -4,31 +4,31 @@
     <table>
       <!-- battleship row 0 -->
       <tr>
-        <td id="00"></td><td id="01"></td><td id="02"></td><td id="03"></td><td id="04"></td><td id="05"></td><td id="06"></td>
+        <td id="00m"></td><td id="01m"></td><td id="02m"></td><td id="03m"></td><td id="04m"></td><td id="05m"></td><td id="06m"></td>
       </tr>
       <!-- battleship row 1 -->
       <tr>
-        <td id="10"></td><td id="11"></td><td id="12"></td><td id="13"></td><td id="14"></td><td id="15"></td><td id="16"></td>
+        <td id="10m"></td><td id="11m"></td><td id="12m"></td><td id="13m"></td><td id="14m"></td><td id="15m"></td><td id="16m"></td>
       </tr>
       <!-- battleship row 2 -->
       <tr>
-        <td id="20"></td><td id="21"></td><td id="22"></td><td id="23"></td><td id="24"></td><td id="25"></td><td id="26"></td>
+        <td id="20m"></td><td id="21m"></td><td id="22m"></td><td id="23m"></td><td id="24m"></td><td id="25m"></td><td id="26m"></td>
       </tr>
       <!-- battleship row 3 -->
       <tr>
-        <td id="30"></td><td id="31"></td><td id="32"></td><td id="33"></td><td id="34"></td><td id="35"></td><td id="36"></td>
+        <td id="30m"></td><td id="31m"></td><td id="32m"></td><td id="33m"></td><td id="34m"></td><td id="35m"></td><td id="36m"></td>
       </tr>
       <!-- battleship row 4 -->
       <tr>
-        <td id="40"></td><td id="41"></td><td id="42"></td><td id="43"></td><td id="44"></td><td id="45"></td><td id="46"></td>
+        <td id="40m"></td><td id="41m"></td><td id="42m"></td><td id="43m"></td><td id="44m"></td><td id="45m"></td><td id="46m"></td>
       </tr>
       <!-- battleship row 5 -->
       <tr>
-        <td id="50"></td><td id="51"></td><td id="52"></td><td id="53"></td><td id="54"></td><td id="55"></td><td id="56"></td>
+        <td id="50m"></td><td id="51m"></td><td id="52m"></td><td id="53m"></td><td id="54m"></td><td id="55m"></td><td id="56m"></td>
       </tr>
       <!-- battleship row 6 -->
       <tr>
-        <td id="60"></td><td id="61"></td><td id="62"></td><td id="63"></td><td id="64"></td><td id="65"></td><td id="66"></td>
+        <td id="60m"></td><td id="61m"></td><td id="62m"></td><td id="63m"></td><td id="64m"></td><td id="65m"></td><td id="66m"></td>
       </tr>
     </table>
   </div>
@@ -37,11 +37,11 @@
 <script>
 export default {
   props: ['move'],
-  methods: {
-
-  },
   created () {
-    console.log(this.move);
+    // var self = this
+    // setInterval(function () {
+    //   console.log(self.move);
+    // }, 1000)
   }
 }
 </script>
