@@ -17,7 +17,8 @@ function editRoom (req,res,next){
     Rooms.updateOne({
       _id: req.params.id
     },{
-      title: req.body.title || result.title
+      title: req.body.title || result.title,
+      players: req.body.players || result.players
     },function(err,result){
       res.send(`${req.body.title} Updated!`)
     })

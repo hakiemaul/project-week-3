@@ -23,14 +23,19 @@
   <div class="services">
 <div class="col-md-4" v-for="(room,index) in rooms">
     <figure class="snip1174 navy col-md-4">
-      <img src="http://cdn.wallpapersafari.com/12/39/6rdHR4.jpg" alt="planet" />
+      <img v-if="room.players.length < 2" src="http://cdn.wallpapersafari.com/12/39/6rdHR4.jpg" alt="planet" />
+      <img class = "war" v-if="room.players.length === 2" src="http://ds9.trekcore.com/images/retake3.gif" alt="planet" />
       <figcaption>
         <h2>{{room.title}}</h2>
         <p>
         created by: <b>{{room.creator}}</b>
         </p>
-        <a href="#" class="btn btn-danger"  v-if="user._id === room.user_id" v-on:click="deleteRoom(room._id,index)"><span class="glyphicon glyphicon-trash"></span>Delete</a>
-        <a href="#" class="btn btn-primary" v-on:click="join()"><span class="glyphicon glyphicon-share"></span>Join</a>
+        <p>
+        {{room.players.length}}/2
+        </p>
+        <a class="btn btn-danger"  v-if="user._id === room.user_id" v-on:click="deleteRoom(room._id,index)"><span class="glyphicon glyphicon-trash"></span>Delete</a>
+        <a class="btn btn-primary" v-if="room.players.length < 2 && isJoin === false" v-on:click="join(room)"><span class="glyphicon glyphicon-share"></span>Join</a>
+        <a class="btn btn-primary" v-if="isJoin === true && room.players.indexOf(user._id) !== -1" v-on:click="quit(room)"><span class="glyphicon glyphicon-share"></span>Quit</a>
       </figcaption>
     </figure>
 </div>
@@ -44,7 +49,8 @@ export default {
     return{
       rooms: [],
       title: "",
-      currentID: ""
+      currentID: "",
+      isJoin: false
     }
   },
     methods:{
@@ -79,17 +85,47 @@ export default {
         let self = this;
         axios.delete(`http://localhost:3000/rooms/${id}`)
         .then(response=>{
-          self.$route.router.go('/rooms')
           self.rooms.splice(index,1)
         })
         .catch(err=>{
           console.log(err);
         })
       },
-      join(){
+      join(room){
         let self = this;
         let user = JSON.parse(localStorage.getItem('token'))
-        self.currentID = user._id
+        axios.get(`http://localhost:3000/rooms/${room._id}`)
+        .then(response=>{
+          let player = response.data.players
+          player.push(user._id)
+          axios.put(`http://localhost:3000/rooms/${room._id}`,{
+            players: player
+          })
+          .then(response=>{
+            room.players.push(user._id)
+            self.isJoin = true
+            console.log(room.players);
+          })
+        })        
+      },
+      quit(room){
+        let self = this;
+        let user = JSON.parse(localStorage.getItem('token'))        
+        axios.get(`http://localhost:3000/rooms/${room._id}`)
+        .then(response=>{
+          let player = response.data.players
+          var index = player.indexOf(user._id)
+          player.splice(index,1)
+          axios.put(`http://localhost:3000/rooms/${room._id}`,{
+            players: player
+          })
+          .then(response=>{
+            room.players.splice(index,1)
+            self.isJoin = false
+          })
+        })
+      
+        self.isJoin = false
       }
     },
     created: function(){
@@ -109,6 +145,11 @@ export default {
 <style lang="css">
 .head{
   text-align: center;
+}
+
+.war {
+  width: 370px;
+  height: 234px;
 }
 .services{
     margin: 20px auto;
