@@ -2,10 +2,12 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4">
-        <h1 id="messageArea"> {{ message }} </h1>
-        <input type="text" class="form-control small" v-model="move" placeholder="A0" id="guessInput">
-        <br>
-        <button type="button" class="btn btn-danger" @click="sendMove" id="fireButton">FIRE!!</button>
+        <div>
+          <h1 id="messageArea"> {{ message }} </h1>
+          <input type="text" class="form-control small" v-model="move" placeholder="A0" id="guessInput">
+          <br>
+          <button type="button" class="btn btn-danger" @click="sendMove" id="fireButton">FIRE!!</button>
+        </div>
       </div>
     </div>
     <div class="row">
@@ -33,8 +35,6 @@ const config = {
 firebase.initializeApp(config)
 
 var db = firebase.database()
-var enemyBoard = db.ref('urls/1')
-var myBoard = db.ref('urls/1')
 export default {
   components: {
     Board,
@@ -43,27 +43,33 @@ export default {
   data () {
     return {
       message: 'Selamat bermain',
-      move: null,
-      enemyMove: null
+      move: '',
+      enemyMove: '',
+      myBoard: this.$route.query.player,
+      enemyBoard: this.$route.query.enemy,
+      turn: true
     }
   },
   methods: {
     sendMove () {
       var self = this
-      enemyBoard.set({
+      db.ref(`urls/${self.enemyBoard}`).set({
         move: self.move
       })
+      self.turn = false
     },
     listen () {
       var self = this
-      myBoard.on('value', function (enemyMove) {
+      db.ref(`urls/${self.myBoard}`).on('value', function (enemyMove) {
         let guess = enemyMove.val().move.toUpperCase()
         self.enemyMove = guess
         handleEnemyMove(guess)
+        self.turn = true
       })
     }
   },
   created () {
+    this.sendMove()
     this.listen()
   }
 }

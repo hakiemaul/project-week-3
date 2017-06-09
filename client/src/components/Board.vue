@@ -95,7 +95,7 @@ form input {
 }
 /*hit or miss*/
 .hit {
-	background: url('http://cdn.mysitemyway.com/etc-mysitemyway/icons/legacy-previews/icons/glowing-green-neon-icons-business/111234-glowing-green-neon-icon-business-spaceship.png') no-repeat center center;
+	background: url('/static/spaceship.png') no-repeat center center;
   width: 48px;
 }
 .miss {

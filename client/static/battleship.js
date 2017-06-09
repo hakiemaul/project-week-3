@@ -112,7 +112,6 @@ var myModel = {
 		for(var i = 0; i < this.numShips; i++) {
 			var ship = this.ships[i];
 			var index = ship.locations.indexOf(guess);
-      console.log(index);
 			// check if a ship location has already been hit
 			if ( ship.hits[index] === "hit" ) {
 				return true;
@@ -228,7 +227,7 @@ var controller = {
 	},
 
   processEnemyMove: function(guess) {
-    var location = parseGuess(guess);
+    var location = parseEnemyGuess(guess);
     if (location) {
 			this.guesses++;
 			var hit = myModel.fire(location);
@@ -253,6 +252,26 @@ function parseGuess(guess) {
 			alert("Oops, that isn't on the board.");
 		} else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
 				alert("Oops, that's off the board!");
+		} else {
+			return row + column;
+		}
+	}
+	return null;
+}
+
+function parseEnemyGuess(guess) {
+	var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
+
+	if (guess === null || guess.length !== 2) {
+		// alert("Oops, please enter a letter and a number on the board.");
+	} else {
+		var firstChar = guess.charAt(0);
+		var row = alphabet.indexOf(firstChar);
+		var column = guess.charAt(1);
+		if (isNaN(row) || isNaN(column)) {
+			// alert("Oops, that isn't on the board.");
+		} else if (row < 0 || row >= model.boardSize || column < 0 || column >= model.boardSize) {
+				// alert("Oops, that's off the board!");
 		} else {
 			return row + column;
 		}
@@ -293,7 +312,7 @@ function init() {
 	// handle "return" key press
 	var guessInput = document.getElementById("guessInput");
 	guessInput.onkeypress = handleKeyPress;
-	// place the ships on the game board
-	model.generateShipLocations();
-  myModel.generateShipLocations();
+	// // place the ships on the game board
+	// model.generateShipLocations();
+  // myModel.generateShipLocations();
 }
