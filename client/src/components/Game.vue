@@ -26,15 +26,7 @@
 <script>
 import Board from '@/components/Board'
 import MyBoard from '@/components/MyBoard'
-const config = {
-  apiKey: "AIzaSyA1_GmSaCxf1gxPRC-11NmW5niDIaaO3KE",
-  authDomain: "fir-lecture-77a47.firebaseapp.com",
-  databaseURL: "https://fir-lecture-77a47.firebaseio.com",
-  storageBucket: "fir-lecture-77a47.appspot.com"
-}
-firebase.initializeApp(config)
 
-var db = firebase.database()
 export default {
   components: {
     Board,
@@ -53,14 +45,14 @@ export default {
   methods: {
     sendMove () {
       var self = this
-      db.ref(`urls/${self.enemyBoard}`).set({
+      this.$db.ref(`urls/${self.enemyBoard}`).set({
         move: self.move
       })
       self.turn = false
     },
     listen () {
       var self = this
-      db.ref(`urls/${self.myBoard}`).on('value', function (enemyMove) {
+      this.$db.ref(`urls/${self.myBoard}`).on('value', function (enemyMove) {
         let guess = enemyMove.val().move.toUpperCase()
         self.enemyMove = guess
         handleEnemyMove(guess)
