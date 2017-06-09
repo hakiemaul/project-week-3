@@ -164,10 +164,14 @@ export default {
         password: self.password
       })
       .then(response=>{
-        console.log(typeof(response.data));
-        alert(`Welcome to Battleship War ${self.username}`)
-        localStorage.setItem('token',JSON.stringify(response.data))
-         window.location = '/'
+        if(response.data === "Username already in use!"){
+          alert(response.data)
+        }
+        else{
+          alert(`Welcome to Battleship War ${self.username}`)
+          localStorage.setItem('token',JSON.stringify(response.data))
+           window.location = '/'
+        }    
       })
       .catch(err=>{
         console.log(err);

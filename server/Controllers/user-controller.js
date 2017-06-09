@@ -17,43 +17,53 @@ const transporter = nodemailer.createTransport({
 
 
 function signup (req,res,next){
-  let hash = bcrypt.hashSync(req.body.password,salt)
-  Users.create({
-    username: req.body.username,
-    password: hash,
-    email: req.body.email,
-    win: 0
+  Users.findOne({
+    username: req.body.username
   },function(err,result){
-    new CronJob('30 * * * * *', function() {
-        var job = queue.create('email',{
-          from:`Welcome ${result.username} <SpaceshipWar@gmail.com>`,
-          to: `${result.email}`,
-          subject: `Welcome ${result.username}`,
-          text: 'WELCOME JING!!',
-          html: `Welcome ${result.username} to SpaceshipWar\n@SpaceshipWar.Corp\nBest regards: Tirta, Aulia, Stedy`
-        }).save(function(err){
-          if(!err)
-          console.log((job.data));
-        })
-        
-        queue.process('email', function(job, done){
-          transporter.sendMail(job.data, (error, info) => {
-              if (error) {
-                  return console.log(error);
-              }
-              else{
-                console.log(`✔ Email Sent to ${job.data.to}`)
-              }        
-          });
-          done()
-        });
-        this.stop()    
-    }, null,
-      true, /* Start the job right now */
-      'Asia/Jakarta' /* Time zone of this job. */
-    );
-    res.send(result)
+    if(result){
+      res.send(`Username already in use!`)
+    }
+    else{
+      let hash = bcrypt.hashSync(req.body.password,salt)
+      Users.create({
+        username: req.body.username,
+        password: hash,
+        email: req.body.email,
+        win: 0
+      },function(err,result){
+        new CronJob('30 * * * * *', function() {
+            var job = queue.create('email',{
+              from:`Welcome ${result.username} <SpaceshipWar@gmail.com>`,
+              to: `${result.email}`,
+              subject: `Welcome ${result.username}`,
+              text: 'WELCOME JING!!',
+              html: `Welcome ${result.username} to SpaceshipWar\n@SpaceshipWar.Corp\nBest regards: Tirta, Aulia, Stedy`
+            }).save(function(err){
+              if(!err)
+              console.log((job.data));
+            })
+            
+            queue.process('email', function(job, done){
+              transporter.sendMail(job.data, (error, info) => {
+                  if (error) {
+                      return console.log(error);
+                  }
+                  else{
+                    console.log(`✔ Email Sent to ${job.data.to}`)
+                  }        
+              });
+              done()
+            });
+            this.stop()    
+        }, null,
+          true, /* Start the job right now */
+          'Asia/Jakarta' /* Time zone of this job. */
+        );
+        res.send(result)
+      })
+    }
   })
+
 }
 
 function login (req,res,next){
