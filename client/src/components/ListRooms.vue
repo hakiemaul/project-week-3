@@ -42,7 +42,7 @@
     </figure>
 </div>
 </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -52,7 +52,8 @@ export default {
       rooms: [],
       title: "",
       currentID: "",
-      isJoin: false
+      isJoin: false,
+      isReady: false
     }
   },
     methods:{
@@ -65,7 +66,7 @@ export default {
         .catch(err=>{
           console.log(err);
         })
-      }, 
+      },
       createRoom(){
         let self = this;
         let user = JSON.parse(localStorage.getItem('token'))
@@ -113,11 +114,11 @@ export default {
             })
             self.isFull = true
           })
-        })        
+        })
       },
       quit(room){
         let self = this;
-        let user = JSON.parse(localStorage.getItem('token'))        
+        let user = JSON.parse(localStorage.getItem('token'))
         axios.get(`http://localhost:3000/rooms/${room._id}`)
         .then(response=>{
           let player = response.data.players
@@ -130,13 +131,14 @@ export default {
             room.players.splice(index,1)
             localStorage.removeItem('isJoin')
             self.isJoin = false
+            self.isReady = false
             let count = room.players.length
             self.$db.ref(`players`).set({
               count: count
             })
           })
         })
-      
+
         self.isJoin = false
       },
       ready(room) {
@@ -174,12 +176,13 @@ export default {
         var check = localStorage.getItem('isJoin')
         console.log(check);
         if(check !== null){
-          this.isJoin = true 
+          this.isJoin = true
           console.log(`masuk isjoin true`);
         }
         else{
           this.isJoin = false
         }
+      }
     },
     created: function(){
       this.listRooms()
@@ -194,8 +197,8 @@ export default {
         // this._id = currentUser._id
         // this.username = currentUser.username
         return currentUser
-      }    
       }
+    }
   }
 </script>
 
