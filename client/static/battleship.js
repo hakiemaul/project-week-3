@@ -287,6 +287,13 @@ function handleFireButton() {
 	guessInput.value = "";
 }
 
+function handleFireButtonEnemy() {
+	var guessInputEnemy = document.getElementById("guessInput2P");
+	var guess = guessInputEnemy.value.toUpperCase();
+	controller.processEnemyMove(guess);
+	guessInputEnemy.value = "";
+}
+
 function handleEnemyMove(input) {
   controller.processEnemyMove(input)
 }
@@ -309,9 +316,15 @@ function init() {
 	// Fire! button onclick handler
 	var fireButton = document.getElementById("fireButton");
 	fireButton.onclick = handleFireButton;
+
+  var fireButton2P = document.getElementById("fireButton2P");
+	fireButton2P.onclick = handleFireButtonEnemy;
 	// handle "return" key press
 	var guessInput = document.getElementById("guessInput");
 	guessInput.onkeypress = handleKeyPress;
+
+  var guessInput2P = document.getElementById("guessInput2P");
+	guessInput2P.onkeypress = handleKeyPressEnemy;
 	// // place the ships on the game board
 	model.generateShipLocations();
   myModel.generateShipLocations();

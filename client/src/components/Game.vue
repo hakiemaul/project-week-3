@@ -3,10 +3,21 @@
     <div class="row">
       <div class="col-md-4">
         <div>
-          <h1 id="messageArea"> {{ message }} </h1>
+          <h1>Player 1</h1>
+          <input type="text" class="form-control small" v-model="move" placeholder="A0" id="guessInput2P">
+          <br>
+          <button type="button" class="btn btn-danger" @click="sendMove" id="fireButton2P">FIRE!!</button>
+          <h5 id="messageArea"> {{ message }} </h5>
+        </div>
+      </div>
+      <div class="col-md-offset-2 col-md-4">
+        <div>
+
+          <h1>Player 2</h1>
           <input type="text" class="form-control small" v-model="move" placeholder="A0" id="guessInput">
           <br>
           <button type="button" class="btn btn-danger" @click="sendMove" id="fireButton">FIRE!!</button>
+<h5 id="messageArea"> {{ message }} </h5>
         </div>
       </div>
     </div>

@@ -178,18 +178,19 @@ export default {
         let user = JSON.parse(localStorage.getItem('token'))
         model.generateShipLocations()
         myModel.generateShipLocations()
-        if(user._id == room.players[0].id) {
+        console.log(room.players);
+        if(user._id == room.players[0]._id) {
           model = model
           myModel = myModel
           this.$db.ref('urls/').set({
-            hash: `/game?player=${user._id}&enemy=${room.players[1].id}`
+            hash: `/game?player=${user._id}&enemy=${room.players[1]._id}`
           });
         } else {
           model = myModel
           myModel = model
           console.log(myModel);
           this.$db.ref('urls/').set({
-            hash: `/game?player=${room.players[1].id}&enemy=${user._id}`
+            hash: `/game?player=${room.players[1]._id}&enemy=${user._id}`
           });
         }
       }
