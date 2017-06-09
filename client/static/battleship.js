@@ -313,6 +313,6 @@ function init() {
 	var guessInput = document.getElementById("guessInput");
 	guessInput.onkeypress = handleKeyPress;
 	// // place the ships on the game board
-	// model.generateShipLocations();
-  // myModel.generateShipLocations();
+	model.generateShipLocations();
+  myModel.generateShipLocations();
 }

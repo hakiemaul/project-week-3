@@ -36,6 +36,8 @@
         <a class="btn btn-danger"  v-if="user._id === room.user_id" v-on:click="deleteRoom(room._id,index)"><span class="glyphicon glyphicon-trash"></span>Delete</a>
         <a class="btn btn-primary" v-if="room.players.length < 2 && isJoin === false" v-on:click="join(room)"><span class="glyphicon glyphicon-share"></span>Join</a>
         <a class="btn btn-primary" v-if="isJoin === true && room.players.indexOf(user._id) !== -1" v-on:click="quit(room)"><span class="glyphicon glyphicon-share"></span>Quit</a>
+        <a class="btn btn-success" v-if="room.players.indexOf(user._id) !== -1 && isReady === false" v-on:click="ready(room)"><span class="glyphicon glyphicon-share"></span>Ready</a>
+        <a class="btn btn-primary" v-if="isFull === true && room.players.indexOf(user._id) !== -1 && isReady === true" v-on:click="start(room)"><span class="glyphicon glyphicon-share"></span>Start</a>
       </figcaption>
     </figure>
 </div>
@@ -105,7 +107,11 @@ export default {
             room.players.push(user._id)
             localStorage.setItem('isJoin','true')
             self.isJoin = true
-            console.log(room.players);
+            let count = room.players.length
+            self.$db.ref(`players`).set({
+              count: count
+            })
+            self.isFull = true
           })
         })        
       },
@@ -123,10 +129,46 @@ export default {
           .then(response=>{
             room.players.splice(index,1)
             localStorage.removeItem('isJoin')
+            self.isJoin = false
+            let count = room.players.length
+            self.$db.ref(`players`).set({
+              count: count
+            })
           })
         })
       
         self.isJoin = false
+      },
+      ready(room) {
+        let user = JSON.parse(localStorage.getItem('token'))
+        // model.generateShipLocations()
+        // myModel.generateShipLocations()
+        // if(user._id == room.players[0].id) {
+        //   model = model
+        //   myModel = myModel
+        // } else {
+        //   model = myModel
+        //   myModel = model
+        //   console.log(myModel);
+        // }
+        this.$db.ref('rooms/').set({
+          ready: true
+        })
+        this.isReady = true
+      },
+      listen (room) {
+        var self = this
+        this.$db.ref(`players/`).on('value', function (tes) {
+          let count = tes.val().count
+          room.players.length = count
+          console.log(count);
+          if(tes.val().count == 2) {
+            self.isFull = true
+          }
+        })
+        this.$db.ref('rooms/').on('value', function (readiness){
+          alert('Opponent is ready')
+        })
       },
       checkJoin(){
         var check = localStorage.getItem('isJoin')
@@ -138,11 +180,13 @@ export default {
         else{
           this.isJoin = false
         }
-      }
     },
     created: function(){
       this.listRooms()
       this.checkJoin()
+      this.rooms.forEach(room => {
+        this.listen(room)
+      })
     },
     computed:{
       user(){
