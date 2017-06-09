@@ -144,16 +144,6 @@ export default {
       },
       ready(room) {
         let user = JSON.parse(localStorage.getItem('token'))
-        // model.generateShipLocations()
-        // myModel.generateShipLocations()
-        // if(user._id == room.players[0].id) {
-        //   model = model
-        //   myModel = myModel
-        // } else {
-        //   model = myModel
-        //   myModel = model
-        //   console.log(myModel);
-        // }
         this.$db.ref('rooms/').set({
           ready: true
         })
@@ -183,9 +173,32 @@ export default {
         else{
           this.isJoin = false
         }
+      },
+      start(room) {
+        let user = JSON.parse(localStorage.getItem('token'))
+        model.generateShipLocations()
+        myModel.generateShipLocations()
+        if(user._id == room.players[0].id) {
+          model = model
+          myModel = myModel
+          this.$db.ref('urls/').set({
+            hash: `/game?player=${user._id}&enemy=${room.players[1].id}`
+          });
+        } else {
+          model = myModel
+          myModel = model
+          console.log(myModel);
+          this.$db.ref('urls/').set({
+            hash: `/game?player=${room.players[1].id}&enemy=${user._id}`
+          });
+        }
       }
     },
     created: function(){
+      this.$db.ref('urls/').on('value', function(url) {
+        var data = url.val();
+        window.location.hash = data.hash;
+      });
       this.listRooms()
       this.checkJoin()
       this.rooms.forEach(room => {
