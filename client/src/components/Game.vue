@@ -14,7 +14,7 @@
         <div>
 
           <h1>Player 2</h1>
-          <input type="text" class="form-control small" v-model="move" placeholder="A0" id="guessInput">
+          <input type="text" class="form-control small" v-model="p2move" placeholder="A0" id="guessInput">
           <br>
           <button type="button" class="btn btn-danger" @click="sendMove" id="fireButton">FIRE!!</button>
 <h5 id="messageArea"> {{ message }} </h5>
