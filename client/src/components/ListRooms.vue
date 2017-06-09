@@ -5,19 +5,20 @@
     <h1>SPACESHIP WAR</h1>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#room-modal">CREATE ROOM</button>
     <div class="modal fade container" id="room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:50px">
-      <div class="col-md-offset-2 col-md-8 jumbotron">
+       <div class="col-md-offset-2 col-md-8 jumbotron">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <form>
-          <h3>Create Room</h3>
-          <div class="form-group col-12">
-            <label>Room Name</label>
-            <input type="text" class="form-control" v-model="title">
-          </div>
-          <div class="col-12">
-              <button type="submit" class="btn btn-primary" v-on:click="createRoom">Create</button>
-          </div>
+         <h3>Create Room</h3>
+         <div class="form-group col-12">
+          <label>Room Name</label>
+          <input type="text" class="form-control" v-model="title">
+         </div>
+         <div class="col-12">
+           <button type="submit" class="btn btn-primary" v-on:click="createRoom" data-dismiss="modal">Create</button>
+         </div>
         </form>
+       </div>
       </div>
-    </div>
     </div>
   </div>
   <div class="services">
