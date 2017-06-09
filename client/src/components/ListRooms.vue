@@ -6,7 +6,6 @@
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#room-modal">CREATE ROOM</button>
     <div class="modal fade container" id="room-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:50px">
       <div class="col-md-offset-2 col-md-8 jumbotron">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <form>
           <h3>Create Room</h3>
           <div class="form-group col-12">
@@ -14,7 +13,7 @@
             <input type="text" class="form-control" v-model="title">
           </div>
           <div class="col-12">
-              <button type="submit" class="btn btn-primary" v-on:click="createRoom" data-dismiss="modal">Create</button>
+              <button type="submit" class="btn btn-primary" v-on:click="createRoom">Create</button>
           </div>
         </form>
       </div>
@@ -36,14 +35,12 @@
         </p>
         <a class="btn btn-danger"  v-if="user._id === room.user_id" v-on:click="deleteRoom(room._id,index)"><span class="glyphicon glyphicon-trash"></span>Delete</a>
         <a class="btn btn-primary" v-if="room.players.length < 2 && isJoin === false" v-on:click="join(room)"><span class="glyphicon glyphicon-share"></span>Join</a>
-        <a class="btn btn-primary" v-if="room.players.indexOf(user._id) !== -1" v-on:click="quit(room)"><span class="glyphicon glyphicon-share"></span>Quit</a>
-        <a class="btn btn-primary" v-if="room.players.indexOf(user._id) !== -1" v-on:click="ready(room)"><span class="glyphicon glyphicon-share"></span>Ready</a>
-        <a class="btn btn-primary" v-if="isFull === true" v-on:click="start(room)"><span class="glyphicon glyphicon-share"></span>Start</a>
+        <a class="btn btn-primary" v-if="isJoin === true && room.players.indexOf(user._id) !== -1" v-on:click="quit(room)"><span class="glyphicon glyphicon-share"></span>Quit</a>
       </figcaption>
     </figure>
 </div>
 </div>
-  </div>
+  </div>  
 </template>
 
 <script>
@@ -53,9 +50,7 @@ export default {
       rooms: [],
       title: "",
       currentID: "",
-      isJoin: false,
-      isReady: false,
-      isFull: false
+      isJoin: false
     }
   },
     methods:{
@@ -68,7 +63,7 @@ export default {
         .catch(err=>{
           console.log(err);
         })
-      },
+      }, 
       createRoom(){
         let self = this;
         let user = JSON.parse(localStorage.getItem('token'))
@@ -78,6 +73,7 @@ export default {
           user_id: user._id
         })
         .then(response=>{
+          console.log(user._id);
           self.rooms.push(response.data)
           //location.reload()
         })
@@ -107,28 +103,15 @@ export default {
           })
           .then(response=>{
             room.players.push(user._id)
+            localStorage.setItem('isJoin','true')
             self.isJoin = true
-            // self.$db.ref('players').on('value', function (count) {
-            //   console.log();
-            //   var current = count.val().count
-            //   current++
-            //   if(current >= 2) {
-            //     current = 2
-            //   }
-            //   self.$db.ref(`players/`).set({
-            //     count: current
-            //   })
-            //   if(current == 2) {
-            //     self.isFull = true
-            //   }
-            // })
-
+            console.log(room.players);
           })
-        })
+        })        
       },
       quit(room){
         let self = this;
-        let user = JSON.parse(localStorage.getItem('token'))
+        let user = JSON.parse(localStorage.getItem('token'))        
         axios.get(`http://localhost:3000/rooms/${room._id}`)
         .then(response=>{
           let player = response.data.players
@@ -139,28 +122,27 @@ export default {
           })
           .then(response=>{
             room.players.splice(index,1)
-            self.isJoin = false
+            localStorage.removeItem('isJoin')
           })
         })
-
+      
         self.isJoin = false
       },
-      ready(room) {
-        let user = JSON.parse(localStorage.getItem('token'))
-        const model1 = model.generateShipLocations()
-        const model2 = myModel.generateShipLocations()
-        if(user._id == room.players[0].id) {
-          model = model1
-          myModel = model2
-        } else {
-          model = model2
-          myModel = model1
+      checkJoin(){
+        var check = localStorage.getItem('isJoin')
+        console.log(check);
+        if(check !== null){
+          this.isJoin = true 
+          console.log(`masuk isjoin true`);
+        }
+        else{
+          this.isJoin = false
         }
       }
     },
     created: function(){
       this.listRooms()
-
+      this.checkJoin()
     },
     computed:{
       user(){
@@ -168,8 +150,8 @@ export default {
         // this._id = currentUser._id
         // this.username = currentUser.username
         return currentUser
+      }    
       }
-    }
   }
 </script>
 
