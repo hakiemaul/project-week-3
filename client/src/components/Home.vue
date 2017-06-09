@@ -17,8 +17,8 @@
         <div class="slide-1"></div>
         <div class="hero">
           <hgroup>
-              <h1>Welcome To</h1>        
-              <h3>Spaceship War</h3>
+              <h1>SPACESHIP<br>WAR</h1>        
+              <h4>@tirta,hakim,stedy CORP</h4>
           </hgroup>
         <button class="btn btn-hero btn-lg" role="button" v-on:click="check()">PLAY</button>
         </div>
@@ -38,7 +38,6 @@
         <div class="hero">        
           <hgroup>
               <h1>FREE TO PLAY</h1>        
-              <!-- <h3>Get start your next awesome project</h3> -->
           </hgroup>
           <!-- <button class="btn btn-hero btn-lg" role="button">See all features</button> -->
         </div>

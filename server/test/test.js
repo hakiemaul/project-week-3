@@ -132,6 +132,7 @@ describe('Rooms',function(){
   beforeEach(function(done){
     var createBlog = new Rooms({
       title: 'the legacy of test',
+      created: 'testguy',
       user_id: mongoose.Types.ObjectId('4edd40c86762e0fb12000005')
     })
     createBlog.save((err,data)=>{
@@ -162,18 +163,20 @@ describe('Get all Rooms in GET /rooms',function(){
   // it('should return error')
 })
 
-describe('Create new Room in POST /rooms',function(){
+describe('Create new Room in POST /createroom',function(){
   it('should return one room created',function(done){
     chai.request(server)
-    .post('/rooms')
+    .post('/createroom')
     .send({
       title: 'asli',
+      creator: 'asli',
       user_id: mongoose.Types.ObjectId('4edd40c86762e0fb12000005')
     })
     .end((err,res)=>{
       res.should.have.status(200)
       res.body.should.be.a('object')
-      res.body.should.have.property('title')
+      res.body.should.have.property('title'),
+      res.body.should.have.property('creator')
       res.body.should.have.property('user_id')
       done()
     })
