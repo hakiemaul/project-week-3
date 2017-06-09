@@ -79,7 +79,7 @@ export default {
         let self = this;
         axios.delete(`http://localhost:3000/rooms/${id}`)
         .then(response=>{
-          this.$route.router.go('/rooms')
+          self.$route.router.go('/rooms')
           self.rooms.splice(index,1)
         })
         .catch(err=>{
